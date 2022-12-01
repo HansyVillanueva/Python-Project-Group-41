@@ -29,38 +29,63 @@ def finacialRep():
 
     while(move !="s" and move !="Stop" and move !="S"and move !="stop"):
         if(move=="1"):
-            finacialRepAdd()
+            addToFiles("FinData")
         elif(move=="2"):
             finacialRepRet(ret)
         print("\n1 for Income Input\n2 for Income Retrieval\ns,S,stop,Stop to end program\n")
         move = input("Action: ")
 
-def finacialRepAdd():
+def addToFiles(file):
     '''
-    Function which handle user inputs for income reporting, includes input validation and file handling
+    Function which handle user inputs for all reporting, includes input validation and file handling
     :return:
     '''
-    finData = "FinData"
-    print("Welcome to Finance Addition - Input s,stop,S to leave\nInput Format: amount date\nExample: 5000 15/2/2022\n")
-    money = input("How much are you making?: ").split()
-    while(money[0] != "s" and money[0] != "stop" and money[0]!="S"and money!="stop"): #User input validation, alongside checking whether the user wishes to leave the function.
-        while(len(money)!=2):
-            money = input("Incorrect length - Only 2 values allowed - How much are you making?: ").split()
-        while(type(money[0]) != type(1)):
-            try:
-                money[0]=int(money[0])
-            except ValueError:
-                money[0] = input("Incorrect input type - Only numerical values allowed - How much are you making?: ")
-        x=""
-        while(not x):
-            try:
-                dates=money[1].split('/')
-                x = datetime.datetime(int(dates[2]),int(dates[1]),int(dates[0]))
-            except (ValueError,IndexError) as error:
-                money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
-        money[1]=x
-        writeFromFile(finData,money)
+    if(file=="FinData" or file=="spenData"): #handling is split into two parts, due to differences in user input requirements
+        if(file=="FinData"):
+            print("Welcome to Finance Addition - Input s,stop,S to leave\nInput Format: amount date\nExample: 5000 15/2/2022\n")
+        else:
+            print("Welcome to Spending Reporting - Input s,stop,S to leave\nInput Format: amount date\nExample: 5000 15/2/2022\n")
         money = input("How much are you making?: ").split()
+        while(money[0] != "s" and money[0] != "stop" and money[0]!="S"and money!="stop"): #User input validation, alongside checking whether the user wishes to leave the function.
+            while(len(money)!=2):
+                money = input("Incorrect length - Only 2 values allowed - How much are you making?: ").split()
+            while(type(money[0]) != type(1)):
+                try:
+                    money[0]=int(money[0])
+                except ValueError:
+                    money[0] = input("Incorrect input type - Only numerical values allowed - How much are you making?: ")
+            x=""
+            while(not x):
+                try:
+                    dates=money[1].split('/')
+                    x = datetime.datetime(int(dates[2]),int(dates[1]),int(dates[0]))
+                except (ValueError,IndexError) as error:
+                    money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
+            money[1]=x
+            writeFromFile(file,money)
+            money = input("How much are you making?: ").split()
+    else:
+        print("Welcome to Donation Addition - Input s,stop,S to leave\nInput Format: amount date charity\nExample: 5000 15/2/2022 RedCross\n")  # User input validation, alongside checking whether the user wishes to leave the function.
+        money = input("How much are you donating?: ").split()
+        while (money[0] != "s" and money[0] != "stop" and money[0] != "S" and money != "stop"):
+            while (len(money) != 3):
+                money = input("Incorrect length - Only 2 values allowed - How much are you making?: ").split()
+            while (type(money[0]) != type(1)):
+                try:
+                    money[0] = int(money[0])
+                except ValueError:
+                    money[0] = input(
+                        "Incorrect input type - Only numerical values allowed - How much are you donating?: ")
+            x = ""
+            while (not x):
+                try:
+                    dates = money[1].split('/')
+                    x = datetime.datetime(int(dates[2]), int(dates[1]), int(dates[0]))
+                except (ValueError, IndexError) as error:
+                    money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
+            money[1] = x
+            writeFromFile(file, money)
+            money = input("How much are you donating?: ").split()
 
 def retrieveLatestIncome():
     '''
@@ -90,38 +115,11 @@ def spendingRep():
         move = input("Invalid Input - Action: ")
     while(move !="s" and move !="Stop" and move !="S"and move !="stop"):
         if(move=="1"):
-            spendingRepAdd()
+            addToFiles("spenData")
         elif(move=="2"):
             finacialRepRet(ret)
         print("\n1 for Spending Input\n2 for Spending Retrieval\ns,S,stop,Stop to end program\n")
         move = input("Action: ")
-
-def spendingRepAdd():
-    '''
-    Function which handle user inputs for spending reporting, includes input validation and file handling
-    :return:
-    '''
-    spenData = "spenData"
-    print("Welcome to Spending Reporting - Input s,stop,S to leave\nInput Format: amount date\nExample: 5000 15/2/2022\n")
-    money = input("How much are you spending?: ").split()
-    while(money[0] != "s" and money[0] != "stop" and money[0] != "S"and money !="stop"): #User input validation, alongside checking whether the user wishes to leave the function.
-        while (len(money) != 2):
-            money = input("Incorrect length - Only 2 values allowed - How much are you making?: ").split()
-        while (type(money[0]) != type(1)):
-            try:
-                money[0] = int(money[0])
-            except ValueError:
-                money[0] = input("Incorrect input type - Only numerical values allowed - How much are you spending?: ")
-        x = ""
-        while (not x):
-            try:
-                dates = money[1].split('/')
-                x = datetime.datetime(int(dates[2]), int(dates[1]), int(dates[0])) #datetime input validation, to ensure it is in the proper format with acceptable values
-            except (ValueError, IndexError) as error:
-                money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
-        money[1] = x
-        writeFromFile(spenData, money)
-        money = input("How much are you spending?: ").split()
 
 def finacialRepRet(y):
     '''
@@ -212,40 +210,13 @@ def donationRep():
         move = input("Invalid Input - Action: ")
     while(move !="s" and move !="Stop" and move !="S"and move !="stop"):
         if(move=="1"):
-            donationRepAdd()
+            addToFiles("donData")
         elif(move=="2"):
             finacialRepRet(ret)
         elif (move == "3"):
             donationInfo()
         print("\n1 for Donation Input\n2 for Donation Retrieval\n3 for Donation info\ns,S,stop,Stop to end program\n")
         move = input("Action: ")
-
-def donationRepAdd():
-    '''
-    Function which handle user inputs for donation reporting, includes input validation and file handling
-    :return:
-    '''
-    donData = "donData"
-    print("Welcome to Donation Addition - Input s,stop,S to leave\nInput Format: amount date charity\nExample: 5000 15/2/2022 RedCross\n")#User input validation, alongside checking whether the user wishes to leave the function.
-    money = input("How much are you donating?: ").split()
-    while(money[0] != "s" and money[0] != "stop" and money[0] != "S"and money !="stop"):
-        while (len(money) != 3):
-            money = input("Incorrect length - Only 2 values allowed - How much are you making?: ").split()
-        while (type(money[0]) != type(1)):
-            try:
-                money[0] = int(money[0])
-            except ValueError:
-                money[0] = input("Incorrect input type - Only numerical values allowed - How much are you donating?: ")
-        x = ""
-        while (not x):
-            try:
-                dates = money[1].split('/')
-                x = datetime.datetime(int(dates[2]), int(dates[1]), int(dates[0]))
-            except (ValueError, IndexError) as error:
-                money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
-        money[1] = x
-        writeFromFile(donData, money)
-        money = input("How much are you donating?: ").split()
 
 def donationInfo():
     '''

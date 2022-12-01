@@ -7,7 +7,7 @@ def writeFromFile(x,y):
     :param y: data object to append into files
     :return:
     '''
-    f1 = open(x,"a+")
+    f1 = open(x,"a+")#open the specified file
     if(len(y)>2): #If statement differentiates different reporting states as some tools have more/less user data
         f1.write(str(y[0])+" "+str(y[1])+" "+str(y[2])+"\n")
     else:
@@ -58,7 +58,7 @@ def addToFiles(file):
             while(not x):
                 try:
                     dates=money[1].split('/')
-                    x = datetime.datetime(int(dates[2]),int(dates[1]),int(dates[0]))
+                    x = datetime.datetime(int(dates[2]),int(dates[1]),int(dates[0])) #validation of user date inputs utilizing datetime external library
                 except (ValueError,IndexError) as error:
                     money[1] = input("Incorrect input type - Only date values allowed - what date was it (D/M/Y): ")
             money[1]=x
@@ -89,12 +89,12 @@ def addToFiles(file):
 
 def retrieveLatestIncome():
     '''
-    Function to retrieve the latest added Income, serves to depict latest input
+    Function to retrieve the latest added Income, serves to depict latest user income input
     :return:
     '''
     try:
         f1 = open("FinData", "r+")
-        values = [x[:-1] for x in f1.readlines()]
+        values = [x[:-1] for x in f1.readlines()] #generates list based on stored values
         values.reverse()
         return (values[0].split())[0] #returns latest income input
     except (FileNotFoundError,IndexError)as error:
@@ -128,7 +128,7 @@ def finacialRepRet(y):
     :return:
     '''
     try:
-        f1 = open(y,"r+")
+        f1 = open(y,"r+") #open the specified file
         print("Previous incomes:")
         print([x[:-1] for x in f1.readlines()]) #returns user inputs for a specific file
     except FileNotFoundError:
@@ -162,18 +162,18 @@ def topIncomeLastYear():
     :return:
     '''
     try:
-        year_now = datetime.datetime.now().year-1
-        f1 = open("FinData", "r")
-        comparision_values=[]
+        year_now = datetime.datetime.now().year-1  #comparision datetime value based on top income from last year
+        f1 = open("FinData", "r")#open the specified file
+        comparision_values=[] #list of incomes from last year
         for row in f1.readlines():
             row_date_info=(row.split())[1].split("-")
             if(int(row_date_info[0])==year_now):
                 comparision_values.append(int(row.split()[0]))
-        comparision_values.sort(reverse=True)
+        comparision_values.sort(reverse=True) #sort to order incomes based to largest to smallest
         if(not comparision_values):
             print("No income earned last year")
         else:
-            print("Largest income earned last year: "+ str(comparision_values[0]))
+            print("Largest income earned last year: "+ str(comparision_values[0])) #due to previous data sort, largest value will be first index of the list
     except FileNotFoundError:
         print("Function not avaliable, please input values")
 
@@ -184,12 +184,12 @@ def topSpendingLastMonth():
     '''
     try:
         day_now = datetime.datetime.now()
-        diff = day_now - datetime.timedelta(days=30)
-        f1 = open("spenData", "r")
-        comparision_values = []
+        diff = day_now - datetime.timedelta(days=30) #minus 30 days from now, represented in datetime
+        f1 = open("spenData", "r")#open the specified file
+        comparision_values = [] #list of spending entries that are within the acceptable date range
         for row in f1.readlines():
             row_date_info = ((row.split())[1]).split("-")
-            comp_date = datetime.datetime(day=int(row_date_info[2]),month=int(row_date_info[1]),year=int(row_date_info[0]))
+            comp_date = datetime.datetime(day=int(row_date_info[2]),month=int(row_date_info[1]),year=int(row_date_info[0])) #datetime object based on user inputs for each spending entry
             if (comp_date>=diff and comp_date<=datetime.datetime.now()):
                 comparision_values.append(int(row.split()[0]))
         comparision_values.sort(reverse=True)
@@ -205,7 +205,7 @@ def donationRep():
     print("-------------------------------------------------\nWelcome to Donation Management!\n-------------------------------------------------\n")
     print("1 for Donation Input\n2 for Donation Retrieval\n3 for Donation info\ns,S,stop,Stop to end program\n")
     ret = "donData"
-    move = input("Action: ")
+    move = input("Action: ") #Managing donation user flow
     while(move != "1" and move !="2"and move !="3" and move !="s" and move !="Stop" and move !="S"and move !="stop"):#User input validation, alongside checking whether the user wishes to leave the function.
         move = input("Invalid Input - Action: ")
     while(move !="s" and move !="Stop" and move !="S"and move !="stop"):
@@ -225,14 +225,14 @@ def donationInfo():
     '''
     print()
     try:
-        f1 = open("donData", "r")
+        f1 = open("donData", "r") #Opens the file
         values = [x[:-1] for x in f1.readlines()]
         unique_charities=[]
         total_money=0
-        for row in values:
+        for row in values: #Calculates various features of the stored data to present to users
            if(not(row.split()[3] in unique_charities)):
-                unique_charities.append(row.split()[3])
-           total_money+=int(row.split()[0])
+                unique_charities.append(row.split()[3])#gathering unique charities based on name
+           total_money+=int(row.split()[0]) #gathering total donated money
 
         print(len(values),"Donations logged.")
         print(len(unique_charities),"Unique charities donated too.")
@@ -245,7 +245,7 @@ def intializeFiles():
     Function that intializes the files for data storage
     :return:
     '''
-    f1 = open("FinData", "a+")
+    f1 = open("FinData", "a+") #intialize these files
     f1 = open("spenData", "a+")
     f1 = open("donData", "a+")
 
@@ -256,13 +256,13 @@ def startProgram():
     '''
     intializeFiles()
     move = ""
-    while(move != "s" and move != "S" and move!="stop" and move != "Stop"):
+    while(move != "s" and move != "S" and move!="stop" and move != "Stop"): #The functional homepage of the program
         print("-------------------------------------------------\nHey Welcome to your Personalised Finance Program!\n-------------------------------------------------\n")
         print("1 for Income Management\n2 for Spending Management\n3 for Finance Info\n4 for Donation Management\ns,S,stop,Stop to end program\n")
         move = input("Action: ")
         while(move != "1" and move !="2" and move!="3" and move != "s" and move != "S" and move!="stop" and move != "Stop"and move != "4"):
             move = input("Invalid Action - Action: ")
-        if(move=="1"):
+        if(move=="1"): #manages user flow
             finacialRep()
         elif(move=="2"):
             spendingRep()
